@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "agent-rag"
+version = "0.1.0"
+description = ""
+authors = ["Suha Mokalla <suhareddy.mokalla@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pypdf2 = "^3.0.1"
+openai = "^1.59.7"
+python-dotenv = "^1.0.1"
+langchain = "^0.3.15"
+langchain-openai = "^0.3.1"
+langchain-community = "^0.3.15"
+faiss-cpu = "^1.9.0.post1"
+streamlit = "^1.41.1"
+
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
