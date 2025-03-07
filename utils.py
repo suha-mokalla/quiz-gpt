@@ -1,10 +1,8 @@
-from PyPDF2 import PdfReader
-from tqdm import tqdm
-import logging
-
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
+from PyPDF2 import PdfReader
+from tqdm import tqdm
 
 
 def extract_text_and_split(pdf_path, progress_callback=None):
@@ -22,17 +20,17 @@ def extract_text_and_split(pdf_path, progress_callback=None):
         for page in tqdm(reader.pages, desc="Extracting text from PDF"):
             text += page.extract_text()
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
-        chunk_overlap=200,
-        length_function=len
+        chunk_size=1000, chunk_overlap=200, length_function=len
     )
     chunks = text_splitter.split_text(text)
     return chunks
+
 
 def create_vector_store(chunks):
     embeddings = OpenAIEmbeddings()
     vector_store = FAISS.from_texts(chunks, embeddings)
     return vector_store
+
 
 def ask_gpt_with_context(query, vector_store, client, k=3, num_questions=5):
     relevant_docs = vector_store.similarity_search(query, k=k)
@@ -48,6 +46,6 @@ def ask_gpt_with_context(query, vector_store, client, k=3, num_questions=5):
     """
     response = client.chat.completions.create(
         model="gpt-4",  # or "gpt-3.5-turbo"
-        messages=[{"role": "user", "content": prompt}]
+        messages=[{"role": "user", "content": prompt}],
     )
     return response.choices[0].message.content
