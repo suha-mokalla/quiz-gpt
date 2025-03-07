@@ -1,8 +1,19 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
+from pydantic import BaseModel
 from PyPDF2 import PdfReader
 from tqdm import tqdm
+
+
+class Question(BaseModel):
+    difficulty: str  # "Easy", "Medium", or "Hard"
+    question: str
+    answer: str
+
+
+class Quiz(BaseModel):
+    questions: list[Question]
 
 
 def extract_text_and_split(pdf_path, progress_callback=None):
@@ -35,17 +46,23 @@ def create_vector_store(chunks):
 def ask_gpt_with_context(query, vector_store, client, k=3, num_questions=5):
     relevant_docs = vector_store.similarity_search(query, k=k)
     context = "\n".join([doc.page_content for doc in relevant_docs])
-    prompt = f"""Use the following context to create a quiz.
-    Create {num_questions} questions and answers, make 40% of the questions easy, 40% medium, and 20% hard. 
-    Provide the questions and answers in the following format:
-    Difficulty: <difficulty>
-    Question: <question>
-    Answer: <answer>
-    Context:
-    {context}
-    """
-    response = client.chat.completions.create(
-        model="gpt-4",  # or "gpt-3.5-turbo"
-        messages=[{"role": "user", "content": prompt}],
+
+    completion = client.beta.chat.completions.parse(
+        model="gpt-4o-2024-08-06",
+        messages=[
+            {
+                "role": "user",
+                "content": f"""Use the following context to create a quiz with {num_questions} questions.
+                Make 40% of the questions easy, 40% medium, and 20% hard.
+                Context:
+                {context}
+                """,
+            }
+        ],
+        response_format=Quiz,
     )
-    return response.choices[0].message.content
+
+    if completion.choices[0].message.refusal:
+        return completion.choices[0].message.refusal
+
+    return completion.choices[0].message.parsed
