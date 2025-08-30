@@ -5,7 +5,7 @@ This repo can be used to generate a quiz based on the uploaded material. It uses
 
 ## Usage
 
-To use the app or the command line tool, create a conda environment with the dependencies or install the dependencies using [poetry](https://python-poetry.org/docs/).
+To use the app or the command line tool, create a poetry environment with the dependencies or install the dependencies using [poetry](https://python-poetry.org/docs/).
 
 Clone the repo, install the dependencies by running the following commands:
 
