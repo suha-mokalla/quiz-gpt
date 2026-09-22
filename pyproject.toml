@@ -1,24 +1,20 @@
-[tool.poetry]
-name = "agent-rag"
+[project]
+name = "quiz-gpt"
 version = "0.1.0"
 description = ""
-authors = ["Suha Mokalla <suhareddy.mokalla@gmail.com>"]
 readme = "README.md"
-package-mode = false
+requires-python = ">=3.11,<4.0"
+authors = [
+    { name = "Suha Mokalla", email = "suhareddy.mokalla@gmail.com" }
+]
 
-[tool.poetry.dependencies]
-python = "^3.11"
-pypdf2 = "^3.0.1"
-openai = "^1.59.7"
-python-dotenv = "^1.0.1"
-langchain = "^0.3.15"
-langchain-openai = "^0.3.1"
-langchain-community = "^0.3.15"
-faiss-cpu = "^1.9.0.post1"
-streamlit = "^1.41.1"
-
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+dependencies = [
+    "pypdf2>=3.0.1,<4.0.0",
+    "openai>=1.59.7,<2.0.0",
+    "python-dotenv>=1.0.1,<2.0.0",
+    "langchain>=0.3.15,<0.4.0",
+    "langchain-openai>=0.3.1,<0.4.0",
+    "langchain-community>=0.3.15,<0.4.0",
+    "faiss-cpu>=1.9.0.post1,<2.0.0",
+    "streamlit>=1.41.1,<2.0.0",
+]
